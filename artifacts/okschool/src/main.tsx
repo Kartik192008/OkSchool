@@ -14,9 +14,11 @@ console.log('Environment variables:', {
 
 if (import.meta.env.DEV) {
   setBaseUrl("http://localhost:8080");
+  console.log('Using development API: http://localhost:8080');
 } else {
-  const apiTarget = import.meta.env.VITE_API_TARGET || "https://okschool-backend.onrender.com";
-  console.log('Setting API base URL to:', apiTarget);
+  // Hardcode production URL since Render env vars aren't being picked up by Vite build
+  const apiTarget = "https://okschool-backend.onrender.com";
+  console.log('Using production API:', apiTarget);
   setBaseUrl(apiTarget);
 }
 
