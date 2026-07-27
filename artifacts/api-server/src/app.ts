@@ -26,9 +26,15 @@ app.use(
   }),
 );
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://10.232.11.246:5173', 'http://192.168.174.1:5173', 'http://192.168.120.1:5173', 'http://10.220.112.44:5173', 'http://10.232.11.92:5173'],
+  origin: ['http://localhost:5173', 'http://10.232.11.246:5173', 'http://192.168.174.1:5173', 'http://192.168.120.1:5173', 'http://10.220.112.44:5173', 'http://10.232.11.92:5173', 'https://okschool-s.onrender.com'],
   credentials: true
 }));
+
+// Log all requests for debugging
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url} - Origin: ${req.headers.origin}`);
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
