@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Search, FileText, Download, Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useListDocuments, getListDocumentsQueryKey } from "@workspace/api-client-react";
+import { supabase } from "@/lib/supabase";
 import { Link } from "wouter";
 
 const CATEGORIES = [
@@ -17,15 +17,30 @@ const CATEGORIES = [
 export function Home() {
   const [activeTab, setActiveTab] = useState("notes");
   const [searchVal, setSearchVal] = useState("");
+  const [docs, setDocs] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [, setLocation] = useLocation();
 
-  const { data: docs, isLoading, error } = useListDocuments(
-    { category: activeTab },
-    { query: { queryKey: getListDocumentsQueryKey({ category: activeTab }) } }
-  );
+  useEffect(() => {
+    fetchDocuments();
+  }, [activeTab]);
 
-  // Log for debugging
-  console.log('Home component state:', { activeTab, docs, isLoading, error });
+  const fetchDocuments = async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('documents')
+        .select('*')
+        .eq('category', activeTab);
+      
+      if (error) throw error;
+      setDocs(data || []);
+    } catch (error) {
+      console.error('Error fetching documents:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
