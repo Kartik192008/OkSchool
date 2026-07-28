@@ -2,8 +2,8 @@ services:
   - type: web
     name: okschool-frontend
     env: static
-    buildCommand: npm install -g pnpm && pnpm install && pnpm build
-    staticPublishPath: dist
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
     envVars:
       - key: VITE_SUPABASE_URL
         value: https://revrmdtnffgnmnqytedr.supabase.co
